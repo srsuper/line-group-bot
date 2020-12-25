@@ -12,7 +12,7 @@ from linebot.models import (
 )
 from linebot.models.events import UnsendEvent, VideoPlayCompleteEvent
 
-handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
+handler = WebhookHandler('15a21aec7a0c6f363b3c264c1c97da4f')
 LINE_FRIEND = dict(
     BROWN="https://stickershop.line-scdn.net/stickershop/v1/sticker/52002734/iPhone/sticker_key@2x.png",
     CONY="https://stickershop.line-scdn.net/stickershop/v1/sticker/52002735/iPhone/sticker_key@2x.png",
@@ -38,16 +38,16 @@ class LineGroupController(Resource):
 
     @handler.add(VideoPlayCompleteEvent)
     def handle_follow(event):
-        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
+        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
 
         line_bot_api.reply_message(
             event.reply_token,
-            messages=[TextSendMessage(text='喔齁齁齁看完了喔波波波')]
+            messages=[TextSendMessage(text='สวัสดีจ้า')]
         )
 
     @handler.add(UnsendEvent)
     def unsend_event(event):
-        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
+        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
         line_type = event.source.type
         group, room, user = None, None, None
         if line_type == 'group':
@@ -63,7 +63,7 @@ class LineGroupController(Resource):
 
     @handler.add(JoinEvent)
     def join_event(event):
-        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
+        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
         token = event.reply_token
 
         line_bot_api.reply_message(token, TextSendMessage(text='偶來囉～～！'))
@@ -71,7 +71,7 @@ class LineGroupController(Resource):
 
     @handler.add(MessageEvent or LeaveEvent, message=TextMessage)
     def message_event(event):
-        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
+        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
 
         line_type = event.source.type
         group, room, user = None, None, None
@@ -96,7 +96,7 @@ class LineGroupController(Resource):
                 msg = '為什麼不是你走？'
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
         elif group:
-            if message == '群組資訊':
+            if message == '/gcount':
                 count = line_bot_api.get_group_members_count(group_id=group)
                 summary = line_bot_api.get_group_summary(group_id=group)
                 text = f'群組名稱➡️ {summary.group_name}\n當前群組人數為➡️ {count}'
@@ -111,7 +111,7 @@ class LineGroupController(Resource):
                             preview_image_url=summary.picture_url,
                         )]
                 )
-            elif message == '我是誰':
+            elif message == '/gprofile':
                 profile = line_bot_api.get_group_member_profile(group_id=group, user_id=user)
                 text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
                 line_bot_api.reply_message(
@@ -128,11 +128,11 @@ class LineGroupController(Resource):
                 message = '請邀請我進群組喔\n指令為: \n1. 我是誰\n2.群組資訊\n3. 你走吧\n3. 輸入 v1 降版'
 
         elif room:
-            if message == '聊天室資訊':
+            if message == '/roomid':
                 count = line_bot_api.get_room_members_count(room_id=room)
                 text = f'聊天室人數為: {count}'
                 line_bot_api.reply_message(token, TextSendMessage(text=text))
-            elif message == '我是誰':
+            elif message == '/roommember':
                 profile = line_bot_api.get_room_member_profile(room_id=room, user_id=user)
                 text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
                 line_bot_api.reply_message(
