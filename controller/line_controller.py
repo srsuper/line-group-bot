@@ -12,7 +12,7 @@ from linebot.models import (
 )
 from linebot.models.events import UnsendEvent, VideoPlayCompleteEvent
 
-handler = WebhookHandler('15a21aec7a0c6f363b3c264c1c97da4f')
+handler = WebhookHandler(os.getenv('LINE_CHANNEL_SECRET'))
 LINE_FRIEND = dict(
     BROWN="https://stickershop.line-scdn.net/stickershop/v1/sticker/52002734/iPhone/sticker_key@2x.png",
     CONY="https://stickershop.line-scdn.net/stickershop/v1/sticker/52002735/iPhone/sticker_key@2x.png",
@@ -38,8 +38,7 @@ class LineGroupController(Resource):
 
     @handler.add(VideoPlayCompleteEvent)
     def handle_follow(event):
-        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
-
+        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
         line_bot_api.reply_message(
             event.reply_token,
             messages=[TextSendMessage(text='สวัสดีจ้า')]
@@ -47,7 +46,7 @@ class LineGroupController(Resource):
 
     @handler.add(UnsendEvent)
     def unsend_event(event):
-        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
+        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
         line_type = event.source.type
         group, room, user = None, None, None
         if line_type == 'group':
@@ -63,7 +62,7 @@ class LineGroupController(Resource):
 
     @handler.add(JoinEvent)
     def join_event(event):
-        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
+        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
         token = event.reply_token
 
         line_bot_api.reply_message(token, TextSendMessage(text='偶來囉～～！'))
@@ -71,8 +70,7 @@ class LineGroupController(Resource):
 
     @handler.add(MessageEvent or LeaveEvent, message=TextMessage)
     def message_event(event):
-        line_bot_api = LineBotApi('yBZc3B7yxD2Afe8H/npJcqL96QrxQUtzd1ua/CzfKxP6HMTJpQultDheBaa4tuy611xlDUqtS4inRcjnbbiFxECSt/g4k7t4KRl2ObgKzPTgK8VM9ryMmFLjtLBrTInmNK3AP1DzpT5kTAYoBdK0yAFIS9xybk1bpjJUhI9NTk0=')
-
+        line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
         line_type = event.source.type
         group, room, user = None, None, None
         if line_type == 'group':
