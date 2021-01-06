@@ -1,7 +1,7 @@
 import os
 from flask import request
 import json
-
+from liff.ttypes import random, requests
 from flask_restful import Resource, abort
 from linebot import (
     LineBotApi, WebhookHandler
@@ -82,8 +82,8 @@ class LineGroupController(Resource):
         token = event.reply_token
         message = event.message.text
 
-        if message == 'คุณไป':
-            msg = 'หายไป 88'
+        if message == 'logout':
+            msg = 'ไปก็ได้.....'
             if group:
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_group(group_id=group)
@@ -91,10 +91,46 @@ class LineGroupController(Resource):
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_room(room_id=room)
             else:
-                msg = 'ทำไมไม่ไป？'
+                msg = '/getbot'
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
+        elif message == '/rps':
+            s = random.choice(["ค้อน","กระดาษ","กรรไกร","ค้อน","กระดาษ","กรรไกร"])
+            msg = 'ผลการเป่ายิ้งฉุบ : '+ s)
+            line_bot_api.reply_message(token, TextSendMessage(text=msg))
+         elif message == '/coin':
+            s = random.choice(["หัว","ก้อย","หัว","ก้อย"])
+            msg1 = 'คุณกำลังโยนเหรียญ. . .')
+            line_bot_api.reply_message(token, TextSendMessage(text=msg1))   
+            msg2 = 'ผลการโยนเหรียญ : '+ n)
+            line_bot_api.reply_message(token, TextSendMessage(text=msg2))
+         elif message == '/slot':
+            s = random.choice('🍇🍇🍋🍑🍒⑦🍇🍋🍑🍒🍋🍑🍒🍑🍒🍒⑦🍋🍑🍒')
+            t = random.choice('🍇🍇🍋🍑🍒⑦🍇🍋🍑🍒🍋🍑🍒🍑🍒🍒⑦🍋🍑🍒')
+            r = random.choice('🍇🍇🍋🍑🍒⑦🍇🍋🍑🍒🍋🍑🍒🍑🍒🍒⑦🍋🍑🍒')
+            v = random.choice('🍇🍇🍋🍑🍒⑦🍇🍋🍑🍒🍋🍑🍒🍑🍒🍒⑦🍋🍑🍒')
+            a = random.choice('🍇🍇🍋🍑🍒⑦🍇🍋🍑🍒🍋🍑🍒🍑🍒🍒⑦🍋🍑🍒')             
+            msg1 = 'คุณกำลังหมุนเครื่องสล็อตแมชชีน. . .')
+            line_bot_api.reply_message(token, TextSendMessage(text=msg1))
+            msg2 = 'ผลเครื่องสล็อตแมชชีน :\n'+' | '+s+' | '+t+' | '+r+' | '+v+' | '+a+' |')
+            line_bot_api.reply_message(token, TextSendMessage(text=msg2))
+         elif message == '/hilo':
+            f = random.choice('123456')
+                r = random.choice('123456')
+                t = random.choice('123456')
+                d = int(f) + int(r) + int(t)
+            msg1 = 'เจ้ากำลังทอยลูกเต๋าทั้ง3ลูก. . .')
+            line_bot_api.reply_message(token, TextSendMessage(text=msg1))   
+            msg2 = '🎲ผลการทอยทั้งหมด🎲\n\n'+'ลูกที่ 1 : '+f+' แต้ม'+'\n'+'ลูกที่ 2 : '+r+' แต้ม'+'\n'+'ลูกที่ 3 : '+t+' แต้ม'+'\n\n'+'แต้มรวมทั้งหมด '+str(d)+' แต้ม)
+            line_bot_api.reply_message(token, TextSendMessage(text=msg2))            
+          elif message == '/pokcard':
+            msg = 'ไพ่ที่คุณได้รับหลังจากการสับ :\n\n'+random.choice(card)+'\n'+random.choice(card)+'\n\nพิมพ์ /draw เพื่อจั่วไพ่')
+            line_bot_api.reply_message(token, TextSendMessage(text=msg))   
+          elif message == '/draw':
+            msg = 'ไพ่ที่คุณได้รับหลังการจั่ว : \n\n'+random.choice(card))
+            line_bot_api.reply_message(token, TextSendMessage(text=msg))   
+
         elif group:
-            if message == '/gc':
+            if message == '/gname':
                 count = line_bot_api.get_group_members_count(group_id=group)
                 summary = line_bot_api.get_group_summary(group_id=group)
                 text = f'ชื่อกลุ่ม ➡️ {summary.group_name}\nหมายเลขกลุ่มปัจจุบันคือ ➡️ {count}'
@@ -109,9 +145,9 @@ class LineGroupController(Resource):
                             preview_image_url=summary.picture_url,
                         )]
                 )
-            elif message == '/gp':
+            elif message == '/me':
                 profile = line_bot_api.get_group_member_profile(group_id=group, user_id=user)
-                text = f'คุณคือ➡️ {profile.display_name}\nID➡️ {profile.user_id}'
+                text = f'คุณคือ ➡️ {profile.display_name}\nID ➡️ {profile.user_id}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text, sender=Sender(
@@ -130,7 +166,7 @@ class LineGroupController(Resource):
                 count = line_bot_api.get_room_members_count(room_id=room)
                 text = f'จำนวนห้องสนทนาคือ : {count}'
                 line_bot_api.reply_message(token, TextSendMessage(text=text))
-            elif message == '/roommember':
+            elif message == '/rme':
                 profile = line_bot_api.get_room_member_profile(room_id=room, user_id=user)
                 text = f'คุณคือ ➡️ {profile.display_name}\nID➡️ {profile.user_id}'
                 line_bot_api.reply_message(
@@ -156,7 +192,7 @@ class LineGroupController(Resource):
                     webhook_endpoint=f"{os.getenv('MY_DOMAIN')}/v1/webhooks/line"
                 )
                 if result == {}:
-                    message = '降版！'
+                    message = 'ดาวน์เกรด！'
             else:
                 message = 'โปรดเชิญฉันเข้าร่วมกลุ่ม \n คำสั่งคือ: \n1 ฉันคือใคร \n2 ข้อมูลกลุ่ม \n3 คุณไปที่ \n3 ป้อน v1 เพื่อดาวน์เกรด'
         line_bot_api.reply_message(token, TextSendMessage(
