@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from dotenv import load_dotenv
 load_dotenv()
-
+from liff.ttypes import random, requests
 from controller.line_controller import LineGroupController
 from controller.echo_controller import EchoController
 
