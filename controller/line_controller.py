@@ -56,7 +56,7 @@ class LineGroupController(Resource):
         user = event.source.user_id
 
         profile = line_bot_api.get_profile(user_id=user)
-        msg = f'{profile.display_name} 剛剛偷收回訊息！(抓)'
+        msg = f'{profile.display_name} แค่แอบถอนข้อความ!'
         line_bot_api.push_message(to=group or room, messages=[TextSendMessage(text=msg)])
         return 'OK'
 
@@ -65,7 +65,7 @@ class LineGroupController(Resource):
         line_bot_api = LineBotApi(os.getenv('LINE_CHANNEL_ACCESS_TOKEN'))
         token = event.reply_token
 
-        line_bot_api.reply_message(token, TextSendMessage(text='偶來囉～～！'))
+        line_bot_api.reply_message(token, TextSendMessage(text='ฉันอยู่ที่นี่ ~~！'))
         return 'OK'
 
     @handler.add(MessageEvent or LeaveEvent, message=TextMessage)
@@ -82,8 +82,8 @@ class LineGroupController(Resource):
         token = event.reply_token
         message = event.message.text
 
-        if message == '你走吧':
-            msg = '走了88'
+        if message == 'คุณไป':
+            msg = 'หายไป 88'
             if group:
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_group(group_id=group)
@@ -91,13 +91,13 @@ class LineGroupController(Resource):
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_room(room_id=room)
             else:
-                msg = '為什麼不是你走？'
+                msg = 'ทำไมไม่ไป？'
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
         elif group:
-            if message == '/gcount':
+            if message == '/gc':
                 count = line_bot_api.get_group_members_count(group_id=group)
                 summary = line_bot_api.get_group_summary(group_id=group)
-                text = f'群組名稱➡️ {summary.group_name}\n當前群組人數為➡️ {count}'
+                text = f'ชื่อกลุ่ม ➡️ {summary.group_name}\nหมายเลขกลุ่มปัจจุบันคือ ➡️ {count}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text,
@@ -109,9 +109,9 @@ class LineGroupController(Resource):
                             preview_image_url=summary.picture_url,
                         )]
                 )
-            elif message == '/gprofile':
+            elif message == '/gp':
                 profile = line_bot_api.get_group_member_profile(group_id=group, user_id=user)
-                text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
+                text = f'คุณคือ➡️ {profile.display_name}\nID➡️ {profile.user_id}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text, sender=Sender(
@@ -123,16 +123,16 @@ class LineGroupController(Resource):
                         )]
                 )
             else:
-                message = '請邀請我進群組喔\n指令為: \n1. 我是誰\n2.群組資訊\n3. 你走吧\n3. 輸入 v1 降版'
+                message = 'โปรดเชิญฉันเข้าร่วมกลุ่ม \n คำสั่งคือ: \n1 ฉันคือใคร \n2 ข้อมูลกลุ่ม \n3 คุณไปที่ \n3 ป้อน v1 เพื่อดาวน์เกรด'
 
         elif room:
             if message == '/roomid':
                 count = line_bot_api.get_room_members_count(room_id=room)
-                text = f'聊天室人數為: {count}'
+                text = f'จำนวนห้องสนทนาคือ : {count}'
                 line_bot_api.reply_message(token, TextSendMessage(text=text))
             elif message == '/roommember':
                 profile = line_bot_api.get_room_member_profile(room_id=room, user_id=user)
-                text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
+                text = f'คุณคือ ➡️ {profile.display_name}\nID➡️ {profile.user_id}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text),
@@ -142,7 +142,7 @@ class LineGroupController(Resource):
                         )]
                 )
         else:
-            message = '請邀請我進群組喔\n指令為: \n1. 我是誰\n2.群組資訊\n3. 你走吧\n3. 輸入 v1 降版'
+            message = 'โปรดเชิญฉันเข้าร่วมกลุ่ม \n คำสั่งคือ: \n1 ฉันคือใคร \n2 ข้อมูลกลุ่ม \n3 คุณไปที่ \n3 ป้อน v1 เพื่อดาวน์เกรด'
             if message == 'video':
                 line_bot_api.reply_message(
                     token,
@@ -158,7 +158,7 @@ class LineGroupController(Resource):
                 if result == {}:
                     message = '降版！'
             else:
-                message = '請邀請我進群組喔\n指令為: \n1. 我是誰\n2.群組資訊\n3. 你走吧\n3. 輸入 v1 降版'
+                message = 'โปรดเชิญฉันเข้าร่วมกลุ่ม \n คำสั่งคือ: \n1 ฉันคือใคร \n2 ข้อมูลกลุ่ม \n3 คุณไปที่ \n3 ป้อน v1 เพื่อดาวน์เกรด'
         line_bot_api.reply_message(token, TextSendMessage(
             text=message,
             sender=Sender(
