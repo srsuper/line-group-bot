@@ -58,7 +58,7 @@ class LineGroupController(Resource):
         message = event.message.text
 
         profile = line_bot_api.get_profile(user_id=user)
-        msg = f'{profile.display_name} แอบถอนข้อความ！'
+        msg = f'{profile.display_name} แอบถอนข้อความ！\nข้อความ : {message}'
         line_bot_api.push_message(to=group or room, messages=[TextSendMessage(text=msg)])
         return 'OK'
 
