@@ -55,6 +55,7 @@ class LineGroupController(Resource):
         elif line_type == 'room':
             room = event.source.room_id
         user = event.source.user_id
+        message = event.message.text
 
         profile = line_bot_api.get_profile(user_id=user)
         msg = f'{profile.display_name} แอบถอนข้อความ！'
