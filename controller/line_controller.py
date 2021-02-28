@@ -84,8 +84,8 @@ class LineGroupController(Resource):
         token = event.reply_token
         message = event.message.text
 
-        if message == '你走吧':
-            msg = '走了88'
+        if message == '/logout':
+            msg = 'บอทกำลัง..ออก'
             if group:
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_group(group_id=group)
@@ -93,7 +93,7 @@ class LineGroupController(Resource):
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
                 line_bot_api.leave_room(room_id=room)
             else:
-                msg = '為什麼不是你走？'
+                msg = '/สถานะ'
                 line_bot_api.reply_message(token, TextSendMessage(text=msg))
         elif group:
             if message == '/กลุ่ม':
@@ -113,7 +113,7 @@ class LineGroupController(Resource):
                 )
             elif message == '/ผส':
                 profile = line_bot_api.get_group_member_profile(group_id=group, user_id=user)
-                text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
+                text = f'ผู้สร้างกลุ่ม ➡️ {profile.display_name}\nID ➡️ {profile.user_id}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text, sender=Sender(
@@ -130,11 +130,11 @@ class LineGroupController(Resource):
         elif room:
             if message == '/ห้อง':
                 count = line_bot_api.get_room_members_count(room_id=room)
-                text = f'聊天室人數為: {count}'
+                text = f'จำนวนสมาชิก : {count}'
                 line_bot_api.reply_message(token, TextSendMessage(text=text))
             elif message == '/ผสห้อง':
                 profile = line_bot_api.get_room_member_profile(room_id=room, user_id=user)
-                text = f'你是➡️ {profile.display_name}\nID➡️ {profile.user_id}'
+                text = f'ผู้สร้าง ➡️ {profile.display_name}\nID ➡️ {profile.user_id}'
                 line_bot_api.reply_message(
                     token, messages=[
                         TextSendMessage(text=text),
@@ -158,7 +158,7 @@ class LineGroupController(Resource):
                     webhook_endpoint=f"{os.getenv('MY_DOMAIN')}/v1/webhooks/line"
                 )
                 if result == {}:
-                    message = '降版！'
+                    message = 'อัพเกรด!..สำเร็จ!'
             else:
                 message = '請邀請我進群組喔\n指令為: \n1. 我是誰\n2.群組資訊\n3. 你走吧\n3. 輸入 v1 降版'
         line_bot_api.reply_message(token, TextSendMessage(
